@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import List
+
+from process.preprocessing_utils import PreprocessingUtils
 
 
 class ParaphraseModule(ABC):
@@ -9,12 +11,12 @@ class ParaphraseModule(ABC):
         self.preproc_utils = None
     
     @abstractmethod
-    def load(self, preproc_utils: dict[str, Any]) -> None:
+    def load(self, preproc_utils: PreprocessingUtils) -> None:
         raise NotImplementedError(
                 f"load() method is not implemented at module {self.name} ({self.__class__.__name__}).")
 
     @abstractmethod
-    def process_batch(self, inputs: list[str], preproc_utils: dict[str, Any]) -> list[str]:
+    def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
         raise NotImplementedError(
                 f"process_multiple() method is not implemented at module {self.name} ({self.__class__.__name__}).")
 

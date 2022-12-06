@@ -1,4 +1,4 @@
-from typing import Any
+from typing import List
 
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
@@ -25,7 +25,7 @@ class CapitalizeSubjectsModule(ParaphraseModule):
             last_char = word.end_char
         return output_text
 
-    def process_batch(self, inputs: list[str], preproc_utils: PreprocessingUtils) -> list[str]:
+    def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
         outputs = []
         for input_text in inputs:
             outputs.append(self.process(input_text, preproc_utils))

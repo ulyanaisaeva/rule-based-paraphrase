@@ -11,7 +11,7 @@ class PreprocessingUtils:
             stanza.download(lang="ru", verbose=True)
             self.stanza = stanza.Pipeline(lang="ru")
     
-    def stanza_parse(self, input_sent) -> stanza.models.common.doc.Sentence:
+    def stanza_parse(self, input_sent: str) -> stanza.models.common.doc.Sentence:
         return self.stanza(input_sent).sentences[0]
 
 
