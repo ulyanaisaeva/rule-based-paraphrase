@@ -4,6 +4,7 @@ from process.preprocessing_utils import PreprocessingUtils
 
 from process.module import ParaphraseModule
 from process.modules.capitalize_subjects import CapitalizeSubjectsModule
+from process.modules.part_to_relative import PartToRelativeModule
 
 
 class ParaphrasePipeline:
