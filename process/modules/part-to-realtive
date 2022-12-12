@@ -142,7 +142,7 @@ class PartToRelativeModule(ParaphraseModule):
     def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
         outputs = []
         for sentence in inputs:
-            data = self.participle_parser(sentence)
+            data = self.participle_parser(sentence, preproc_utils)
             if data != {}:
                 tokens = sentence.split()
                 pure_tokens = []
