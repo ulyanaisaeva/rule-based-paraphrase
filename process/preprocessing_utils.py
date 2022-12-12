@@ -12,7 +12,7 @@ class PreprocessingUtils:
             self.stanza = stanza.Pipeline(lang="ru")
     
     def stanza_parse(self, input_sent: str) -> stanza.models.common.doc.Sentence:
-        return self.stanza(input_sent).sentences[0]
+        return self.stanza(input_sent).sentences
 
 
 if __name__ == "__main__":
