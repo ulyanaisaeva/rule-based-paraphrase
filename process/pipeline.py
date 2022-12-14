@@ -2,8 +2,8 @@ from typing import List
 
 from process.preprocessing_utils import PreprocessingUtils
 
+from process import modules
 from process.module import ParaphraseModule
-from process.modules.capitalize_subjects import CapitalizeSubjectsModule
 
 
 class ParaphrasePipeline:
@@ -35,7 +35,7 @@ class ParaphrasePipeline:
 
 if __name__ == "__main__":
     p = ParaphrasePipeline(modules = [
-        CapitalizeSubjectsModule(name="capitalize_subjects"),
+        modules.CapitalizeSubjectsModule(name="capitalize_subjects"),
     ])
     p.load()
     result = p.run(["Это первое предложение.", "Это второе предложение."])
