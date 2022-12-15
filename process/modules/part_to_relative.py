@@ -1,5 +1,6 @@
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
+from stanza.utils.conll import CoNLL
 
 import pymorphy2 
 morph = pymorphy2.MorphAnalyzer()
