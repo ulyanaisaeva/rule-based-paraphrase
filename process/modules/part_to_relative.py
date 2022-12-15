@@ -14,8 +14,8 @@ class PartToRelativeModule(ParaphraseModule):
 
     def load(self, preproc_utils: PreprocessingUtils) -> None:
     # load any tools as `preproc_utils` attributes
+        self.reproc_ultils.stanza.stanza = preproc_ultils.stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
         self.loaded = True
-        self.stanza = stanza.preproc_ultils.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
     
     def participle_parser(self, sentence, preproc_utils: PreprocessingUtils):
         parsed_data = self.preproc_utils.stanza(sentence)
