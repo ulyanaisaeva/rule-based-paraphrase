@@ -136,7 +136,7 @@ class PartToRelativeModule(ParaphraseModule):
         rewritten_sentence += '.'
         return rewritten_sentence
 
-    def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
+    def process_batch(self, inputs, preproc_utils: PreprocessingUtils):
         outputs = []
         for sentence in inputs:
             data = self.participle_parser(sentence, preproc_utils)
