@@ -14,11 +14,11 @@ class PartToRelativeModule(ParaphraseModule):
 
     def load(self, preproc_utils: PreprocessingUtils) -> None:
     # load any tools as `preproc_utils` attributes
-        self.preproc_utils.stanza = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
+        self.preproc_utils.stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
         self.loaded = True
     
     def participle_parser(self, sentence, preproc_utils: PreprocessingUtils):
-        parsed_data = self.preproc_utils.stanza(sentence)
+        parsed_data = self.preproc_utils.stanza_model(sentence)
         output_file_name = "participle.conllu"
         CoNLL.write_doc2conll(parsed_data, output_file_name)
         participle_data = pyconll.load_from_file("participle.conllu")
