@@ -75,11 +75,9 @@ class PartToRelativeModule(ParaphraseModule):
         dep = []
         ag_data = data['agent_full'].split()
         for t in tokens:
-            token = t.strip(',.')
+            token = t.strip(',.!,')
             if token == data['participle']: # выбираем причастие 
-                t_pos = tokens.index(t) # index of participle
                 dep = data['dep'].strip(',').split()
-                d_pos = tokens.index(dep[0])
                 part = self.participle(token)
                 part_norm = self.normal_form(token)
                 if part.tag.voice == 'actv': # проверяем залог
@@ -144,12 +142,9 @@ class PartToRelativeModule(ParaphraseModule):
             if data != {}:
                 tokens = sentence.split()
                 pure_tokens = []
-                head = morph.parse(data['head'])[0]
                 for t in tokens:
-                    pure_tokens.append(t.strip('.,'))
+                    pure_tokens.append(t.strip('.,?!'))
                 rewritten_sentence = ''
-                dep = []
-                ag_data = data['agent_full'].split()
                 if pure_tokens.index(data['head']) < pure_tokens.index(data['participle']):
                     paraphrased = self.participle_rewrite(sentence, preproc_utils)
                     outputs.append(paraphrased)
