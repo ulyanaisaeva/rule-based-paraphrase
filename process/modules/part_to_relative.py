@@ -19,7 +19,7 @@ class PartToRelativeModule(ParaphraseModule):
     def participle_parser(self, sentence, preproc_utils: PreprocessingUtils):
         parsed_data = preproc_utils.stanza_parse(sentence)
         output_file_name = "participle.conllu"
-        preproc_utils.stanza.utils.conll.CoNLL.write_doc2conll(parsed_data, output_file_name)
+        CoNLL.write_doc2conll(parsed_data, output_file_name)
         participle_data = pyconll.load_from_file("participle.conllu")
         roots = udon2.Importer.from_stanza(parsed_data.to_dict()) 
         root = roots[0]  
