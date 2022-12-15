@@ -68,8 +68,8 @@ class PartToRelativeModule(ParaphraseModule):
                 part_norm = elem
         return part_norm
     
-    def participle_rewrite(self,sentence):
-        data = self.participle_parser(sentence)
+    def participle_rewrite(self, sentence, preproc_utils: PreprocessingUtils):
+        data = self.participle_parser(sentence, preproc_utils)
         tokens = sentence.split()
         rewritten_sentence = ''
         dep = []
