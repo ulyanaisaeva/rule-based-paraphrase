@@ -151,7 +151,7 @@ class PartToRelativeModule(ParaphraseModule):
                 dep = []
                 ag_data = data['agent_full'].split()
                 if pure_tokens.index(data['head']) < pure_tokens.index(data['participle']):
-                    paraphrased = self.participle_rewrite(sentence)
+                    paraphrased = self.participle_rewrite(sentence, preproc_utils)
                     outputs.append(paraphrased)
                 else:
                     outputs.append(sentence)
