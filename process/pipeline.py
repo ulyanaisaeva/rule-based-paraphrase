@@ -36,6 +36,7 @@ class ParaphrasePipeline:
 if __name__ == "__main__":
     p = ParaphrasePipeline(modules = [
         modules.CapitalizeSubjectsModule(name="capitalize_subjects"),
+        modules.PartToRelativeModule(name="part_to_relative"),
     ])
     p.load()
     result = p.run(["Это первое предложение.", "Это второе предложение."])
