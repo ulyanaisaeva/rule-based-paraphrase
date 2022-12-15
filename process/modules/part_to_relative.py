@@ -1,13 +1,9 @@
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
 
-!pip install pymorphy2
 import pymorphy2 
 morph = pymorphy2.MorphAnalyzer()
-
-%pip install pyconll
 import pyconll
-%pip install udon2
 import udon2
 
 
