@@ -15,7 +15,7 @@ class ConverbToConjuctionModule(ParaphraseModule):
     def load(self, preproc_utils: PreprocessingUtils) -> None:
         # load any tools as `preproc_utils` attributes
         self.loaded = True
-        self.preproc_ultils.stanza = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
+        self.stanza = stanza.preproc_ultils.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
 
     def converb_parser(self, sentence, preproc_utils: PreprocessingUtils):
         data = {}
