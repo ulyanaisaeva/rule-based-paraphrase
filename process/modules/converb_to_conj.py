@@ -171,6 +171,8 @@ class ConverbToConjuctionModule(ParaphraseModule):
             if data != {}:
                 paraphrased = self.converb_rewrite(sentence, preproc_utils)
                 outputs.append(paraphrased)
+            else:
+                outputs.append(sentence)
         return outputs
 
 if __name__ == "__main__":
