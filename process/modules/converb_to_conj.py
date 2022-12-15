@@ -7,7 +7,6 @@ import pymorphy2
 morph = pymorphy2.MorphAnalyzer()
 import pyconll
 import udon2
-stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
 
 class ConverbToConjuctionModule(ParaphraseModule):
     def __init__(self, name="capitalize_nouns") -> None:
@@ -16,10 +15,11 @@ class ConverbToConjuctionModule(ParaphraseModule):
     def load(self, preproc_utils: PreprocessingUtils) -> None:
         # load any tools as `preproc_utils` attributes
         self.loaded = True
+        self.preproc_ultils.stanza = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
 
     def converb_parser(self, sentence, preproc_utils: PreprocessingUtils):
         data = {}
-        parsed_data = stanza_model(sentence)
+        parsed_data = self.preproc_ultils.stanza(sentence)
         output_file_name = "participle.conllu"
         CoNLL.write_doc2conll(parsed_data, output_file_name)
         participle_data = pyconll.load_from_file("participle.conllu")
