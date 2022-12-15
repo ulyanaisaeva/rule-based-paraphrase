@@ -9,7 +9,7 @@ import pyconll
 import udon2
 stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
 
-class ConverbToConjuction(ParaphraseModule):
+class ConverbToConjuctionModule(ParaphraseModule):
     def __init__(self, name="capitalize_nouns") -> None:
         super().__init__(name=name)
     
