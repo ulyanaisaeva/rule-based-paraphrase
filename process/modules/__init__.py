@@ -1,0 +1,1 @@
+from process.modules.capitalize_subjects import CapitalizeSubjectsModule
