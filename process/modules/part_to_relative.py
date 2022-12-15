@@ -6,7 +6,7 @@ import pymorphy2
 morph = pymorphy2.MorphAnalyzer()
 import pyconll
 import udon2
-
+stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
 
 class PartToRelativeModule(ParaphraseModule):
     def __init__(self, name="part_to_relative") -> None:
@@ -17,7 +17,7 @@ class PartToRelativeModule(ParaphraseModule):
         self.loaded = True    
     
     def participle_parser(self, sentence, preproc_utils: PreprocessingUtils):
-        parsed_data = preproc_utils.stanza_parse(sentence)
+        parsed_data = stanza_model(sentence)
         output_file_name = "participle.conllu"
         CoNLL.write_doc2conll(parsed_data, output_file_name)
         participle_data = pyconll.load_from_file("participle.conllu")
