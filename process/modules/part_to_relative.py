@@ -132,8 +132,9 @@ class PartToRelativeModule(ParaphraseModule):
                     pass
                 else:
                     rewritten_sentence += f' {t}'
-        rewritten_sentence += '.'
-        return rewritten_sentence
+        if rewritten_sentence[-1] != '.':
+            rewritten_sentence += '.'
+        return rewritten_sentence.strip()
 
     def process_batch(self, inputs, preproc_utils: PreprocessingUtils):
         outputs = []
