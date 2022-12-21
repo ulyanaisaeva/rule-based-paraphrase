@@ -9,20 +9,19 @@ import pymorphy2
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
 
-
 class ReltoPart(ParaphraseModule):
     def __init__(self, name="rel_to_part") -> None:
         super().__init__(name=name)
     
     def load(self, preproc_utils: PreprocessingUtils) -> None:
          if getattr(preproc_utils, 'morph', None) is None:
-             preproc_utils.morph = pymorphy2.MorphAnalyzer()
+              preproc_utils.morph = pymorphy2.MorphAnalyzer()
          self.loaded = True
         
     def conjunction_check(self, tree_node, sent, morph):
-      head = preproc_utils.morph.parse(str(tree_node.parent.parent).split('|')[-1])[0]
+      head = morph.parse(str(tree_node.parent.parent).split('|')[-1])[0]
       wordform = str(tree_node).split('|')[-1]
-      parsed_rel = preproc_utils.morph.parse(wordform)[0]
+      parsed_rel = morph.parse(wordform)[0]
       conjuncts = []
       for child in tree_node.parent.children:
         rewritten_sentence = sent
@@ -31,9 +30,9 @@ class ReltoPart(ParaphraseModule):
       if len(conjuncts) == 0: return False
       for conjunct in conjuncts:
         if parsed_rel.tag.number=='sing':
-          rewrite = preproc_utils.morph.parse(conjunct)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case, parsed_rel.tag.gender}).word
+          rewrite = morph.parse(conjunct)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case, parsed_rel.tag.gender}).word
         else:
-          rewrite = preproc_utils.morph.parse(conjunct)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case}).word
+          rewrite = morph.parse(conjunct)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case}).word
         rewritten_sentence = rewritten_sentence.replace(conjunct, rewrite)
       return rewritten_sentence
 
@@ -86,6 +85,7 @@ class ReltoPart(ParaphraseModule):
                       else:
                         output[sentence] = ' '.join(rewritten_sentence.split())
 
+
                   elif node.deprel!='nsubj' and node.deprel!='nsubj:pass':
                     wh_word, ch = '', ''
                     head = node.parent.parent
@@ -127,14 +127,9 @@ class ReltoPart(ParaphraseModule):
                     else:
                         output[sentence] = ' '.join(rewritten_sentence.split())
 
-            except (ValueError, AttributeError):
+            except (ValueError):
                 pass
           if sentence not in output.keys():
             output[sentence] = sentence
           
         return list(output.values())
-
-
-if __name__ == "__main__":
-    print("This module is not callable")
-    exit()
