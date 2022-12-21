@@ -13,7 +13,8 @@ class ConverbToConjuctionModule(ParaphraseModule):
         super().__init__(name=name)
     
     def load(self, preproc_utils: PreprocessingUtils) -> None:
-        # load any tools as `preproc_utils` attributes
+        if getattr(preproc_utils, 'morph', None) is None:
+            preproc_utils.morph = pymorphy2.MorphAnalyzer()
         preproc_utils.stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
         self.loaded = True
 
