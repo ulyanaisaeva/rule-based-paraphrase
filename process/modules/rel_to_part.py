@@ -78,7 +78,7 @@ class ReltoPart(ParaphraseModule):
                         rewritten_sentence = sentence.split(wordform)[0] + rewrite + ' ' + ' '.join(sentence.split(wordform)[1].split(' ')[2:])
                       else:
                         rewritten_sentence = sentence.split(wordform)[0] + self.adjuncts(node, root) + ' ' + rewrite + ' '+ sentence.split(str(node.parent).split('|')[-1])[1]
-                      ans = self.conjunction_check(node, rewritten_sentence, morph)
+                      ans = self.conjunction_check(node, rewritten_sentence, preproc_utils.morph)
                       if ans:
                         output[sentence] = ' '.join(ans.split())
                       
@@ -120,7 +120,7 @@ class ReltoPart(ParaphraseModule):
                       rewritten_sentence = sentence.split(wordform)[0] + ' ' + self.adjuncts(node, root) + ' ' + rewrite + ' ' + sentence.split(verb)[-1]
                     if len(aux)>0:
                       rewritten_sentence = rewritten_sentence.replace(str(aux).split('|')[-1], '')
-                    ans = self.conjunction_check(node, rewritten_sentence, morph)
+                    ans = self.conjunction_check(node, rewritten_sentence, preproc_utils.morph)
                     if ans:
                         output[sentence] = ' '.join(ans.split())
                       
