@@ -16,10 +16,9 @@ with open('process/russian_verbs_aspect_pairs.json', 'r') as fin:
 
 # класс для преобразования имперфективного будущего в перфективное
 class ImperfFutureToPerfModule(ParaphraseModule):
-    def __init__(self, name="imperf_to_perf", verbs_dictionary) -> None:
+    def __init__(self, name="imperf_to_perf") -> None:
         super().__init__(name=name)
         self.morph = pymorphy2.MorphAnalyzer()
-        self.verbs_dictionary = verbs_dictionary
     
     def load(self, preproc_utils: PreprocessingUtils) -> None:
         # load any tools as `preproc_utils` attributes
@@ -181,11 +180,12 @@ class ImperfFutureToPerfModule(ParaphraseModule):
             changed_sentence = input_text
         return changed_sentence
 
-    def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
+    def process_batch(self, inputs: List[str], verbs_dictionary: dict, preproc_utils: PreprocessingUtils) -> List[str]:
         outputs = []
         for input_text in inputs:
             if self.detect_imperfective_future(input_text): 
-                paraphrased = self.process(input_text, self.verbs_dictionary, preproc_utils)
+                
+                paraphrased = self.process(input_text, verbs_dictionary, preproc_utils)
                 outputs.append(paraphrased)
             else: 
                 outputs.append(input_text)
