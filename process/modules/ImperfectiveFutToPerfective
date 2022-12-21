@@ -8,22 +8,23 @@ from typing import List
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
 
-# словарь с глаголами СВ и НСВ 
-verbs_dictionary = None
-with open('process/russian_verbs_aspect_pairs.json', 'r') as fin:
-    verbs_data = json.load(fin)
-    verbs_dictionary = verbs_data['russian verbs']
-
-# класс для преобразования имперфективного будущего в перфективное
 class ImperfFutureToPerfModule(ParaphraseModule):
-    def __init__(self, name="imperf_to_perf") -> None:
+    def __init__(self, name="imperf_to_perf", verbs_dict) -> None:
         super().__init__(name=name)
         self.morph = pymorphy2.MorphAnalyzer()
+        self.verbs_dict_path = "process/russian_verbs_aspect_pairs.json"
     
     def load(self, preproc_utils: PreprocessingUtils) -> None:
         # load any tools as `preproc_utils` attributes
         preproc_utils.stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
         self.loaded = True
+    
+    def get_verbs_dict(file_path): 
+        verbs_dictionary = None
+        with open(file_path, 'r') as fin:
+            verbs_data = json.load(fin)
+            verbs_dictionary = verbs_data['russian verbs']
+        return verbs_dictionary
 
     # детектирование имперфективного будущего 
     def detect_imperfective_future(self, sentence):
@@ -180,12 +181,12 @@ class ImperfFutureToPerfModule(ParaphraseModule):
             changed_sentence = input_text
         return changed_sentence
 
-    def process_batch(self, inputs: List[str], verbs_dictionary: dict, preproc_utils: PreprocessingUtils) -> List[str]:
+    def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
+        verbs_dict = get_verbs_dict(self.verbs_dict_path)
         outputs = []
         for input_text in inputs:
             if self.detect_imperfective_future(input_text): 
-                
-                paraphrased = self.process(input_text, verbs_dictionary, preproc_utils)
+                paraphrased = self.process(input_text, verbs_dict, preproc_utils)
                 outputs.append(paraphrased)
             else: 
                 outputs.append(input_text)
