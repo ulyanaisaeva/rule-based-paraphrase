@@ -1,14 +1,16 @@
 from collections import defaultdict
+import re
 from typing import List
-import stanza
-import udon2
-from stanza.utils.conll import CoNLL
+
 import pyconll
 import pymorphy2
-from process.pipeline import ParaphrasePipeline
+import stanza
+from stanza.utils.conll import CoNLL
+import udon2
+
 from process.module import ParaphraseModule
-import re
 from process.preprocessing_utils import PreprocessingUtils
+
 
 class FintoConv(ParaphraseModule):
     def __init__(self, name="fin_to_conv") -> None:
