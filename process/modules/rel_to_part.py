@@ -78,10 +78,10 @@ class ReltoPart(ParaphraseModule):
                         rewritten_sentence = sentence.split(wordform)[0] + self.adjuncts(node, root) + ' ' + rewrite + ' '+ sentence.split(str(node.parent).split('|')[-1])[1]
                       ans = self.conjunction_check(node, rewritten_sentence, morph)
                       if ans:
-                        output[sentence] = ans
+                        output[sentence] = ' '.join(ans.split())
                       
                       else:
-                        output[sentence] = rewritten_sentence
+                        output[sentence] = ' '.join(rewritten_sentence.split())
 
 
                   elif node.deprel!='nsubj' and node.deprel!='nsubj:pass':
@@ -98,7 +98,7 @@ class ReltoPart(ParaphraseModule):
                       wordform = str(node).split('|')[-1]
                       prep = str(ch).split('|')[-1]
                       rewritten_sentence = sentence.split(prep + ' ' + wordform)[0] + wh_word + sentence.split(prep + ' ' + wordform)[1]
-                      output[sentence] = rewritten_sentence
+                      output[sentence] = ' '.join(rewritten_sentence.split())
                   
                   elif node.deprel=='nsubj:pass' and not node.parent.has('feats', 'Tense', 'Fut'):
                     aux = node.parent.get_by('deprel', 'aux:pass')
@@ -120,10 +120,10 @@ class ReltoPart(ParaphraseModule):
                       rewritten_sentence = rewritten_sentence.replace(str(aux).split('|')[-1], '')
                     ans = self.conjunction_check(node, rewritten_sentence, morph)
                     if ans:
-                        output[sentence] = ans
+                        output[sentence] = ' '.join(ans.split())
                       
                     else:
-                        output[sentence] = rewritten_sentence
+                        output[sentence] = ' '.join(rewritten_sentence.split())
 
             except (ValueError, AttributeError):
                 pass
@@ -132,6 +132,6 @@ class ReltoPart(ParaphraseModule):
           
         return list(output.values())
 
- if __name__ == "__main__":
-     print("This module is not callable")
-     exit()
+if __name__ == "__main__":
+    print("This module is not callable")
+    exit()
