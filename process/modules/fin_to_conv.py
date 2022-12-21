@@ -1,21 +1,24 @@
 from collections import defaultdict
+import re
 from typing import List
-import stanza
-import udon2
-from stanza.utils.conll import CoNLL
+
 import pyconll
 import pymorphy2
-from process.pipeline import ParaphrasePipeline
+import stanza
+from stanza.utils.conll import CoNLL
+import udon2
+
 from process.module import ParaphraseModule
-import re
 from process.preprocessing_utils import PreprocessingUtils
+
 
 class FintoConv(ParaphraseModule):
     def __init__(self, name="fin_to_conv") -> None:
         super().__init__(name=name)
         
     def load(self, preproc_utils: PreprocessingUtils) -> None:
-        # load any tools as `preproc_utils` attributes
+        if getattr(preproc_utils, 'morph', None) is None:
+            preproc_utils.morph = pymorphy2.MorphAnalyzer()
         self.loaded = True
 
     def get_key(self, val, my_dict):
@@ -36,7 +39,6 @@ class FintoConv(ParaphraseModule):
         
     def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
         output = defaultdict()
-        morph = pymorphy2.MorphyAnalyzer()
         for sentence in inputs:
           sentence = re.sub('[«»]', '', sentence)
           parsed_data = preproc_utils.stanza(sentence)
@@ -81,9 +83,12 @@ class FintoConv(ParaphraseModule):
                             
                       
                       for con in can_transform:
+                        dependents = con.get_subtree_text()
                         verb = str(con).split('|')[-1]
-                        rewrite =  morph.parse(verb)[0].inflect({'GRND'}).word
-                        rewritten_sentence = rewritten_sentence.replace(verb, rewrite)
+                        rewrite = preproc_utils.morph.parse(verb)[0].inflect({'GRND'}).word
+                        rewritten_sentence = re.sub(dependents, dependents + ',', rewritten_sentence)
+                        rewritten_sentence = rewritten_sentence.replace(verb, ', '+rewrite)
+    
                       if len(delete_conj)>0:
                         for elem in delete_conj:
                           old_subsentence = ' '.join([str(token).split('|')[-1] for token in elem.linear()])
@@ -91,13 +96,13 @@ class FintoConv(ParaphraseModule):
                           old_subsentence = re.sub(delete_space_after, r'', old_subsentence)
                           c = elem.get_by('deprel', 'cc')
                           elem.remove_child(c[0])
-                          subsentence = str(elem.get_subtree_text())
+                          subsentence = ', '+str(elem.get_subtree_text())
                           subsentence = re.sub(delete_space_before, r'', subsentence)
                           subsentence = re.sub(delete_space_after, r'', subsentence)
                           v = str(elem).split('|')[-1]
                           rewritten_sentence = rewritten_sentence.replace(old_subsentence, subsentence)
                       
-                      
+                      rewritten_sentence = re.sub('( ,)|(, ,)|(,,)', ',', rewritten_sentence).strip(',')
                       if rewritten_sentence!=sentence:
                         output[sentence] = rewritten_sentence
                       else:
@@ -110,9 +115,8 @@ class FintoConv(ParaphraseModule):
               output[sentence] = sentence
             
         return list(output.values())
-        
- if __name__ == "__main__":
-     print("This module is not callable")
-     exit()
 
 
+if __name__ == "__main__":
+    print("This module is not callable")
+    exit()
