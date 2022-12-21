@@ -39,7 +39,6 @@ class FintoConv(ParaphraseModule):
         
     def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
         output = defaultdict()
-        morph = pymorphy2.MorphyAnalyzer()
         for sentence in inputs:
           sentence = re.sub('[«»]', '', sentence)
           parsed_data = preproc_utils.stanza(sentence)
