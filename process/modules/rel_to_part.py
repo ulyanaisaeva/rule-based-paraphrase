@@ -127,7 +127,7 @@ class ReltoPart(ParaphraseModule):
                     else:
                         output[sentence] = ' '.join(rewritten_sentence.split())
 
-            except (ValueError):
+            except (ValueError, AttributeError):
                 pass
           if sentence not in output.keys():
             output[sentence] = sentence
