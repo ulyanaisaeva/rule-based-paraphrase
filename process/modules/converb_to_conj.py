@@ -1,12 +1,12 @@
+import pyconll
+import pymorphy2 
+import stanza
+from stanza.utils.conll import CoNLL
+import udon2
+
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
-from stanza.utils.conll import CoNLL
 
-import stanza
-import pymorphy2 
-morph = pymorphy2.MorphAnalyzer()
-import pyconll
-import udon2
 
 class ConverbToConjuctionModule(ParaphraseModule):
     def __init__(self, name="capitalize_nouns") -> None:
