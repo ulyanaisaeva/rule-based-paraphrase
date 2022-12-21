@@ -17,7 +17,8 @@ class FintoConv(ParaphraseModule):
         super().__init__(name=name)
         
     def load(self, preproc_utils: PreprocessingUtils) -> None:
-        # load any tools as `preproc_utils` attributes
+        if getattr(preproc_utils, 'morph', None) is None:
+            preproc_utils.morph = pymorphy2.MorphAnalyzer()
         self.loaded = True
 
     def get_key(self, val, my_dict):
