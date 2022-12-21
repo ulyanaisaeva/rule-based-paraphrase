@@ -52,7 +52,7 @@ class ConverbToConjuctionModule(ParaphraseModule):
             data['ag_word'] = ag_word
         return data
 
-    def chose_converb(self, token):
+    def chose_converb(self, token, morph):
         conv_list = morph.parse(token)
         conv = morph.parse(token)[0]
         for elem in conv_list:
