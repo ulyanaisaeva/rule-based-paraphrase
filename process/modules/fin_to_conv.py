@@ -81,9 +81,12 @@ class FintoConv(ParaphraseModule):
                             
                       
                       for con in can_transform:
+                        dependents = con.get_subtree_text()
                         verb = str(con).split('|')[-1]
                         rewrite =  morph.parse(verb)[0].inflect({'GRND'}).word
-                        rewritten_sentence = rewritten_sentence.replace(verb, rewrite)
+                        rewritten_sentence = re.sub(dependents, dependents + ',', rewritten_sentence)
+                        rewritten_sentence = rewritten_sentence.replace(verb, ', '+rewrite)
+    
                       if len(delete_conj)>0:
                         for elem in delete_conj:
                           old_subsentence = ' '.join([str(token).split('|')[-1] for token in elem.linear()])
@@ -91,13 +94,13 @@ class FintoConv(ParaphraseModule):
                           old_subsentence = re.sub(delete_space_after, r'', old_subsentence)
                           c = elem.get_by('deprel', 'cc')
                           elem.remove_child(c[0])
-                          subsentence = str(elem.get_subtree_text())
+                          subsentence = ', '+str(elem.get_subtree_text())
                           subsentence = re.sub(delete_space_before, r'', subsentence)
                           subsentence = re.sub(delete_space_after, r'', subsentence)
                           v = str(elem).split('|')[-1]
                           rewritten_sentence = rewritten_sentence.replace(old_subsentence, subsentence)
                       
-                      
+                      rewritten_sentence = re.sub('( ,)|(, ,)|(,,)', ',', rewritten_sentence).strip(',')
                       if rewritten_sentence!=sentence:
                         output[sentence] = rewritten_sentence
                       else:
@@ -111,8 +114,8 @@ class FintoConv(ParaphraseModule):
             
         return list(output.values())
         
- if __name__ == "__main__":
-     print("This module is not callable")
-     exit()
+if __name__ == "__main__":
+    print("This module is not callable")
+    exit()
 
 
