@@ -10,7 +10,7 @@ from process.preprocessing_utils import PreprocessingUtils
 
 # словарь с глаголами СВ и НСВ 
 verbs_dictionary = None
-with open('/content/drive/MyDrive/Paraphraser project/russian_verbs_aspect_pairs.json', 'r') as fin:
+with open('process/russian_verbs_aspect_pairs.json', 'r') as fin:
     verbs_data = json.load(fin)
     verbs_dictionary = verbs_data['russian verbs']
 
