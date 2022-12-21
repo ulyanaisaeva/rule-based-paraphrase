@@ -1,9 +1,11 @@
 from collections import defaultdict
 from typing import List
+
 import stanza
 import udon2
 import pyconll
 import pymorphy2
+
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
 
