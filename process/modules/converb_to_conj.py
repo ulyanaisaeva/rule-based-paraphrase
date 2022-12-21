@@ -91,7 +91,7 @@ class ConverbToConjuctionModule(ParaphraseModule):
                 if token == 'не' and sentence_list[sentence_list.index(token)+1] == converb:
                     pass
                 elif token == converb:
-                    head = morph.parse(head_string)[0]
+                    head = preproc_utils.morph.parse(head_string)[0]
                     conv = self.chose_converb(token)
                     norm = self.normal_form(token)
                     ag_word = morph.parse(data['ag_word'])[0]
