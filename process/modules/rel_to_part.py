@@ -57,7 +57,6 @@ class ReltoPart(ParaphraseModule):
             
     def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
         output = defaultdict()
-        morph = pymorphy2.MorphAnalyzer()
         for sentence in inputs:
           if ' котор' in sentence:
             try:
