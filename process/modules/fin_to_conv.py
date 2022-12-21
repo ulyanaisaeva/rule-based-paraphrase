@@ -85,7 +85,7 @@ class FintoConv(ParaphraseModule):
                       for con in can_transform:
                         dependents = con.get_subtree_text()
                         verb = str(con).split('|')[-1]
-                        rewrite =  morph.parse(verb)[0].inflect({'GRND'}).word
+                        rewrite = preproc_utils.morph.parse(verb)[0].inflect({'GRND'}).word
                         rewritten_sentence = re.sub(dependents, dependents + ',', rewritten_sentence)
                         rewritten_sentence = rewritten_sentence.replace(verb, ', '+rewrite)
     
