@@ -9,7 +9,7 @@ from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
 
 class ImperfFutureToPerfModule(ParaphraseModule):
-    def __init__(self, name="imperf_to_perf", verbs_dict) -> None:
+    def __init__(self, name="imperf_to_perf") -> None:
         super().__init__(name=name)
         self.morph = pymorphy2.MorphAnalyzer()
         self.verbs_dict_path = "process/russian_verbs_aspect_pairs.json"
@@ -19,7 +19,7 @@ class ImperfFutureToPerfModule(ParaphraseModule):
         preproc_utils.stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
         self.loaded = True
     
-    def get_verbs_dict(file_path): 
+    def get_verbs_dict(self, file_path): 
         verbs_dictionary = None
         with open(file_path, 'r') as fin:
             verbs_data = json.load(fin)
@@ -182,7 +182,7 @@ class ImperfFutureToPerfModule(ParaphraseModule):
         return changed_sentence
 
     def process_batch(self, inputs: List[str], preproc_utils: PreprocessingUtils) -> List[str]:
-        verbs_dict = get_verbs_dict(self.verbs_dict_path)
+        verbs_dict = self.get_verbs_dict(self.verbs_dict_path)
         outputs = []
         for input_text in inputs:
             if self.detect_imperfective_future(input_text): 
