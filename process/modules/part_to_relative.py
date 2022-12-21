@@ -147,8 +147,11 @@ class PartToRelativeModule(ParaphraseModule):
                     pure_tokens.append(t.strip('.,?!'))
                 rewritten_sentence = ''
                 if pure_tokens.index(data['head']) < pure_tokens.index(data['participle']):
-                    paraphrased = self.participle_rewrite(sentence, preproc_utils)
-                    outputs.append(paraphrased)
+                    try:
+                        paraphrased = self.participle_rewrite(sentence, preproc_utils)
+                        outputs.append(paraphrased)
+                    except:
+                        outputs.append(sentence)     
                 else:
                     outputs.append(sentence)
             else:
