@@ -12,13 +12,14 @@ class ReltoPart(ParaphraseModule):
         super().__init__(name=name)
     
     def load(self, preproc_utils: PreprocessingUtils) -> None:
-        # load any tools as `preproc_utils` attributes
-        self.loaded = True
+         if getattr(preproc_utils, 'morph', None) is None:
+             preproc_utils.morph = pymorphy2.MorphAnalyzer()
+         self.loaded = True
         
     def conjunction_check(self, tree_node, sent, morph):
-      head = morph.parse(str(tree_node.parent.parent).split('|')[-1])[0]
+      head = preproc_utils.morph.parse(str(tree_node.parent.parent).split('|')[-1])[0]
       wordform = str(tree_node).split('|')[-1]
-      parsed_rel = morph.parse(wordform)[0]
+      parsed_rel = preproc_utils.morph.parse(wordform)[0]
       conjuncts = []
       for child in tree_node.parent.children:
         rewritten_sentence = sent
@@ -27,9 +28,9 @@ class ReltoPart(ParaphraseModule):
       if len(conjuncts) == 0: return False
       for conjunct in conjuncts:
         if parsed_rel.tag.number=='sing':
-          rewrite = morph.parse(conjunct)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case, parsed_rel.tag.gender}).word
+          rewrite = preproc_utils.morph.parse(conjunct)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case, parsed_rel.tag.gender}).word
         else:
-          rewrite = morph.parse(conjunct)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case}).word
+          rewrite = preproc_utils.morph.parse(conjunct)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case}).word
         rewritten_sentence = rewritten_sentence.replace(conjunct, rewrite)
       return rewritten_sentence
 
@@ -64,14 +65,14 @@ class ReltoPart(ParaphraseModule):
               selection = root.select_by("lemma", "который")
               for node in selection:
                   if node.deprel=='nsubj' and node.parent.upos=='VERB' and not node.parent.has('feats', 'Tense', 'Fut') and len(node.parent.get_by('deprel', 'aux'))==0:
-                      head = morph.parse(str(node.parent.parent).split('|')[-1])[0]
+                      head = preproc_utils.morph.parse(str(node.parent.parent).split('|')[-1])[0]
                       wordform = str(node).split('|')[-1]
-                      parsed_rel = morph.parse(wordform)[0]
+                      parsed_rel = preproc_utils.morph.parse(wordform)[0]
                       verb = str(node.parent).split('|')[-1]
                       if parsed_rel.tag.number=='sing':
-                        rewrite = morph.parse(verb)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case, parsed_rel.tag.gender}).word
+                        rewrite = preproc_utils.morph.parse(verb)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case, parsed_rel.tag.gender}).word
                       else:
-                        rewrite = morph.parse(verb)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case}).word
+                        rewrite = preproc_utils.morph.parse(verb)[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case}).word
                       if not self.adjuncts(node, root):
                         rewritten_sentence = sentence.split(wordform)[0] + rewrite + ' ' + ' '.join(sentence.split(wordform)[1].split(' ')[2:])
                       else:
@@ -102,16 +103,16 @@ class ReltoPart(ParaphraseModule):
                   
                   elif node.deprel=='nsubj:pass' and not node.parent.has('feats', 'Tense', 'Fut'):
                     aux = node.parent.get_by('deprel', 'aux:pass')
-                    head = morph.parse(str(node.parent.parent).split('|')[-1])[0]
+                    head = preproc_utils.morph.parse(str(node.parent.parent).split('|')[-1])[0]
                     verb = str(node.parent).split('|')[-1]
                     if len(aux)!=0 and aux[0].has('feats', 'Tense', 'Pres'):
                       break
                     wordform = str(node).split('|')[-1]
-                    parsed_rel = morph.parse(wordform)[0]
+                    parsed_rel = preproc_utils.morph.parse(wordform)[0]
                     if parsed_rel.tag.number=='sing':
-                        rewrite = morph.parse(str(node.parent).split('|')[-1])[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case, parsed_rel.tag.gender}).word
+                        rewrite = preproc_utils.morph.parse(str(node.parent).split('|')[-1])[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case, parsed_rel.tag.gender}).word
                     elif parsed_rel.tag.number!='sing':
-                        rewrite = morph.parse(str(node.parent).split('|')[-1])[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case}).word
+                        rewrite = preproc_utils.morph.parse(str(node.parent).split('|')[-1])[0].inflect({'PRTF', parsed_rel.tag.number, head.tag.case}).word
                     if not self.adjuncts(node, root):
                       rewritten_sentence = sentence.split(wordform)[0] + rewrite + ' ' + ' '.join(sentence.split(wordform)[1].split(' ')[2:])
                     else:
