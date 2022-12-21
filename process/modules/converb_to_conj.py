@@ -15,7 +15,8 @@ class ConverbToConjuctionModule(ParaphraseModule):
     def load(self, preproc_utils: PreprocessingUtils) -> None:
         if getattr(preproc_utils, 'morph', None) is None:
             preproc_utils.morph = pymorphy2.MorphAnalyzer()
-        preproc_utils.stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
+        if getattr(preproc_utils, 'stanza_model', None) is None:
+            preproc_utils.stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
         self.loaded = True
 
     def converb_parser(self, sentence, preproc_utils: PreprocessingUtils):
