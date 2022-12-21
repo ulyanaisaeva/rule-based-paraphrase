@@ -9,6 +9,7 @@ import pymorphy2
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
 
+
 class ReltoPart(ParaphraseModule):
     def __init__(self, name="rel_to_part") -> None:
         super().__init__(name=name)
@@ -85,7 +86,6 @@ class ReltoPart(ParaphraseModule):
                       else:
                         output[sentence] = ' '.join(rewritten_sentence.split())
 
-
                   elif node.deprel!='nsubj' and node.deprel!='nsubj:pass':
                     wh_word, ch = '', ''
                     head = node.parent.parent
@@ -138,4 +138,3 @@ class ReltoPart(ParaphraseModule):
 if __name__ == "__main__":
     print("This module is not callable")
     exit()
-
