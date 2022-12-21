@@ -177,6 +177,7 @@ class ConverbToConjuctionModule(ParaphraseModule):
                 outputs.append(sentence)
         return outputs
 
+
 if __name__ == "__main__":
     print("This module is not callable")
     exit()
