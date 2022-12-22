@@ -185,7 +185,7 @@ class ImperfFutureToPerfModule(ParaphraseModule):
         verbs_dict = self.get_verbs_dict(self.verbs_dict_path)
         outputs = []
         for input_text in inputs:
-            if self.detect_imperfective_future(input_text): 
+            if self.detect_imperfective_future(input_text, preproc_utils): 
                 paraphrased = self.process(input_text, verbs_dict, preproc_utils)
                 outputs.append(paraphrased)
             else: 
