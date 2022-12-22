@@ -155,7 +155,7 @@ class ImperfFutureToPerfModule(ParaphraseModule):
                         changed_sentence = re.sub(impf_verb_node['form'], perf_verb, changed_sentence)
                         changed_sentence = re.sub('  ', ' ', changed_sentence)
                     elif idx >= 1 and changed_sentence != '':
-                        upd_sentence_parsed = self.preproc_utils.stanza_model(changed_sentence).sentences[0] 
+                        upd_sentence_parsed = preproc_utils.stanza_model(changed_sentence).sentences[0] 
                         for word in upd_sentence_parsed.words: 
                             if word.text == aux_verb_node['form'] and word.feats == aux_verb_node['feats']: 
                                 aux_parent = word.head
