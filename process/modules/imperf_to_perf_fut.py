@@ -83,10 +83,10 @@ class ImperfFutureToPerfModule(ParaphraseModule):
         return perf_verb
         
     # функция для нахождения аналитического будущего
-    def find_impf_verb(self, sentence):
+    def find_impf_verb(self, sentence, preproc_utils):
         impf_verb_nodes = []
         aux_verb_nodes = []
-        doc = self.preproc_utils.stanza_model(sentence)
+        doc = preproc_utils.stanza_model(sentence)
         parsed_sentence = doc.sentences[0]
         roots = udon2.Importer.from_stanza(doc.to_dict())
         sentence_tree = roots[0]
