@@ -131,7 +131,7 @@ class ImperfFutureToPerfModule(ParaphraseModule):
     # преобразование
     def process(self, input_text: str, verbs_dict: dict, preproc_utils: PreprocessingUtils) -> str:
         changed_sentence = '' 
-        doc = self.stanza_model(input_text)
+        doc = preproc_utils.stanza_model(input_text)
         parsed_sentence = doc.sentences[0]
         impf_verb_nodes, aux_verb_nodes = self.find_impf_verb(input_text)
         if len(impf_verb_nodes) > 0 and len(aux_verb_nodes) > 0:
