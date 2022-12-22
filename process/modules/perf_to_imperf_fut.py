@@ -27,8 +27,8 @@ class PerfFutToImperfModule(ParaphraseModule):
         return verbs_dictionary
 
     # детектирование перфективного будущего 
-    def detect_perfective_future(self, sentence):
-        doc = self.preproc_utils.stanza_model(sentence)
+    def detect_perfective_future(self, sentence, preproc_utils):
+        doc = preproc_utils.stanza_model(sentence)
         parsed_sentence = doc.sentences[0]
         roots = udon2.Importer.from_stanza(doc.to_dict())
         for i, root in enumerate(roots): 
