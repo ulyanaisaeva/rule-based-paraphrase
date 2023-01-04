@@ -1,20 +1,21 @@
+import pyconll
+import pymorphy2 
+import stanza
+from stanza.utils.conll import CoNLL
+import udon2
+
 from process.module import ParaphraseModule
 from process.preprocessing_utils import PreprocessingUtils
-from stanza.utils.conll import CoNLL
-
-import stanza
-import pymorphy2 
-morph = pymorphy2.MorphAnalyzer()
-import pyconll
-import udon2
 
 class PartToRelativeModule(ParaphraseModule):
     def __init__(self, name="part_to_relative") -> None:
         super().__init__(name=name)
 
     def load(self, preproc_utils: PreprocessingUtils) -> None:
-    # load any tools as `preproc_utils` attributes
-        preproc_utils.stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
+        if getattr(preproc_utils, 'morph', None) is None:
+            preproc_utils.morph = pymorphy2.MorphAnalyzer()
+        if getattr(preproc_utils, 'stanza_model', None) is None:
+            preproc_utils.stanza_model = stanza.Pipeline('ru', processors='tokenize,pos,lemma,depparse')
         self.loaded = True
     
     def participle_parser(self, sentence, preproc_utils: PreprocessingUtils):
@@ -52,8 +53,8 @@ class PartToRelativeModule(ParaphraseModule):
             return {}
     
     def participle(self, token):
-        part_list = morph.parse(token)
-        part = morph.parse(token)[0]
+        part_list = preproc_utils.morph.parse(token)
+        part = preproc_utils.morph.parse(token)[0]
         for elem in part_list:
             if elem.tag.POS == 'PRTF':
                 part = elem
@@ -61,7 +62,7 @@ class PartToRelativeModule(ParaphraseModule):
     
     def normal_form(self, token):
         part = self.participle(token)
-        part_norm_list = morph.parse(part.normal_form)
+        part_norm_list = preproc_utils.morph.parse(part.normal_form)
         part_norm = part_norm_list[0]
         for elem in part_norm_list:
             if elem.tag.POS == 'INFN':
@@ -81,15 +82,15 @@ class PartToRelativeModule(ParaphraseModule):
                 part = self.participle(token)
                 part_norm = self.normal_form(token)
                 if part.tag.voice == 'actv': # проверяем залог
-                    head = morph.parse(data['head'])[0]
+                    head = preproc_utils.morph.parse(data['head'])[0]
                     if part.tag.tense == 'pres':
                         verb = part_norm.inflect({'VERB', part.tag.tense, head.tag.number, '3per'}).word
                     elif part.tag.tense == 'past':
                         verb = part_norm.inflect({'VERB', part.tag.tense, head.tag.number, head.tag.gender}).word
                     if head.tag.number == 'sing':
-                        which = morph.parse('который')[0].inflect({head.tag.number, head.tag.gender, 'nomn'}).word
+                        which = preproc_utils.morph.parse('который')[0].inflect({head.tag.number, head.tag.gender, 'nomn'}).word
                     elif head.tag.number == 'plur':
-                        which = morph.parse('который')[0].inflect({head.tag.number, 'nomn'}).word
+                        which = preproc_utils.morph.parse('который')[0].inflect({head.tag.number, 'nomn'}).word
                     change = f'{which} {verb}'
                     rewritten_sentence += f' {change}'
                 elif part.tag.voice == 'pssv':
@@ -97,34 +98,34 @@ class PartToRelativeModule(ParaphraseModule):
                     if len(data['agent_full']) != 0:
                         for word in ag_data:
                             if word != ',':
-                                ag_el = morph.parse(word.strip(',."«»'))[0]
+                                ag_el = preproc_utils.morph.parse(word.strip(',."«»'))[0]
                                 ag_el_ = ag_el.inflect({'nomn'}).word
                                 agent_list.append(ag_el_)
                             else:
                                 agent_list.append(word)
-                        head = morph.parse(data['head'])[0]
-                        agent = morph.parse(data['agent'])[0]
+                        head = preproc_utils.morph.parse(data['head'])[0]
+                        agent = preproc_utils.morph.parse(data['agent'])[0]
                         if part.tag.tense == 'past':
                             verb = part_norm.inflect({'VERB', part.tag.tense, agent.tag.number, agent.tag.gender}).word
                         if part.tag.tense == 'pres':
                             verb = part_norm.inflect({'VERB', part.tag.tense, agent.tag.number, '3per'}).word
                         if head.tag.number == 'sing':
-                            which = morph.parse('который')[0].inflect({head.tag.number, head.tag.gender, head.tag.animacy, 'accs'}).word
+                            which = preproc_utils.morph.parse('который')[0].inflect({head.tag.number, head.tag.gender, head.tag.animacy, 'accs'}).word
                         elif head.tag.number == 'plur':
-                            which = morph.parse('который')[0].inflect({head.tag.number, head.tag.animacy, 'accs'}).word
+                            which = preproc_utils.morph.parse('который')[0].inflect({head.tag.number, head.tag.animacy, 'accs'}).word
                         rewritten_sentence += f' {which}'
                         rewritten_sentence += f' {verb}'
                         rewritten_sentence += f' {" ".join(agent_list)}'
                     else:
-                        head = morph.parse(data['head'])[0]
+                        head = preproc_utils.morph.parse(data['head'])[0]
                         if part.tag.tense == 'past':
                             verb = part_norm.inflect({'VERB', part.tag.tense, 'plur'}).word
                         if part.tag.tense == 'pres':
                             verb = part_norm.inflect({'VERB', part.tag.tense, 'plur', '3per'}).word
                         if head.tag.number == 'sing':
-                            which = morph.parse('который')[0].inflect({head.tag.number, head.tag.gender, head.tag.animacy, 'accs'}).word
+                            which = preproc_utils.morph.parse('который')[0].inflect({head.tag.number, head.tag.gender, head.tag.animacy, 'accs'}).word
                         elif head.tag.number == 'plur':
-                            which = morph.parse('который')[0].inflect({head.tag.number, head.tag.animacy, 'accs'}).word
+                            which = preproc_utils.morph.parse('который')[0].inflect({head.tag.number, head.tag.animacy, 'accs'}).word
                         rewritten_sentence += f' {which}'
                         rewritten_sentence += f' {verb}'            
             else:
