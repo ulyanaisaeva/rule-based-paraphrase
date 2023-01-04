@@ -54,7 +54,7 @@ class ConverbToConjuctionModule(ParaphraseModule):
             data['ag_word'] = ag_word
         return data
 
-    def chose_converb(self, token, morph):
+    def chose_converb(self, token):
         conv_list = preproc_utils.morph.parse(token)
         conv = preproc_utils.morph.parse(token)[0]
         for elem in conv_list:
