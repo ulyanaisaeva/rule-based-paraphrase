@@ -52,7 +52,7 @@ class PartToRelativeModule(ParaphraseModule):
         else:
             return {}
     
-    def participle(self, token):
+    def participle(self, token, preproc_utils: PreprocessingUtils):
         part_list = preproc_utils.morph.parse(token)
         part = preproc_utils.morph.parse(token)[0]
         for elem in part_list:
@@ -60,8 +60,8 @@ class PartToRelativeModule(ParaphraseModule):
                 part = elem
         return part
     
-    def normal_form(self, token):
-        part = self.participle(token)
+    def normal_form(self, token, preproc_utils: PreprocessingUtils):
+        part = self.participle(token, preproc_utils)
         part_norm_list = preproc_utils.morph.parse(part.normal_form)
         part_norm = part_norm_list[0]
         for elem in part_norm_list:
@@ -79,8 +79,8 @@ class PartToRelativeModule(ParaphraseModule):
             token = t.strip(',.!,')
             if token == data['participle']: # выбираем причастие 
                 dep = data['dep'].strip(',').split()
-                part = self.participle(token)
-                part_norm = self.normal_form(token)
+                part = self.participle(token, preproc_utils)
+                part_norm = self.normal_form(token, preproc_utils)
                 if part.tag.voice == 'actv': # проверяем залог
                     head = preproc_utils.morph.parse(data['head'])[0]
                     if part.tag.tense == 'pres':
