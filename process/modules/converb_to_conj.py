@@ -55,8 +55,8 @@ class ConverbToConjuctionModule(ParaphraseModule):
         return data
 
     def chose_converb(self, token, morph):
-        conv_list = morph.parse(token)
-        conv = morph.parse(token)[0]
+        conv_list = preproc_utils.morph.parse(token)
+        conv = preproc_utils.morph.parse(token)[0]
         for elem in conv_list:
             if elem.tag.POS == 'GRND':
                 conv = elem
@@ -64,7 +64,7 @@ class ConverbToConjuctionModule(ParaphraseModule):
     
     def normal_form(self, token):
         conv = self.chose_converb(token)
-        conv_norm_list = morph.parse(conv.normal_form)
+        conv_norm_list = preproc_utils.morph.parse(conv.normal_form)
         conv_norm = conv_norm_list[0]
         for elem in conv_norm_list:
             if elem.tag.POS == 'INFN':
@@ -94,7 +94,7 @@ class ConverbToConjuctionModule(ParaphraseModule):
                     head = preproc_utils.morph.parse(head_string)[0]
                     conv = self.chose_converb(token, preproc_utils.morph)
                     norm = self.normal_form(token)
-                    ag_word = morph.parse(data['ag_word'])[0]
+                    ag_word = preproc_utils.morph.parse(data['ag_word'])[0]
                     if head.tag.tense == 'pres':
                         if conv.tag.aspect != 'perf':
                             verb = norm.inflect({'VERB', head.tag.tense, head.tag.number, head.tag.person}).word
@@ -120,10 +120,10 @@ class ConverbToConjuctionModule(ParaphraseModule):
                 token = t.strip(',.!?«»""')
                 if sentence_list.index(token) <= sentence_list.index(dep[-1]):
                     if token == converb:
-                        head = morph.parse(head_string)[0]
+                        head = preproc_utils.morph.parse(head_string)[0]
                         conv = self.chose_converb(token)
                         norm = self.normal_form(token)
-                        ag_word = morph.parse(data['ag_word'])[0]
+                        ag_word = preproc_utils.morph.parse(data['ag_word'])[0]
                         if head.tag.tense == 'pres':
                             if conv.tag.aspect != 'perf':
                                 verb = norm.inflect({'VERB', head.tag.tense, head.tag.number, head.tag.person}).word
